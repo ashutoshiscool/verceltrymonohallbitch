@@ -80,23 +80,25 @@ cd "$DIR" || exit 1
 echo "Installing frontend NPM dependencies..."
 npm install --legacy-peer-deps
 
+echo "=== Installing PM2 (Process Manager) ==="
+if ! command -v pm2 &> /dev/null; then
+    npm install -g pm2
+fi
+
 echo "=== Starting Applications ==="
+# Stop existing PM2 processes if any
+pm2 delete monohall-backend 2>/dev/null || true
+pm2 delete monohall-frontend 2>/dev/null || true
+
 echo "Starting Backend on port $BACKEND_PORT..."
 cd "$DIR/backend" || exit 1
-node server.js &
-BACKEND_PID=$!
+pm2 start server.js --name "monohall-backend"
 
 echo "Starting Next.js frontend on port $FRONTEND_PORT..."
 cd "$DIR" || exit 1
-npm run dev -- -p $FRONTEND_PORT &
-FRONTEND_PID=$!
+pm2 start "npm run dev -- -p $FRONTEND_PORT" --name "monohall-frontend"
 
-echo "Both services are running in the background."
-echo "Backend PID: $BACKEND_PID"
-echo "Frontend PID: $FRONTEND_PID"
-echo "Press Ctrl+C to stop both servers."
+echo "Both services are now running permanently in the background via PM2."
+pm2 save
+pm2 list
 
-# Handle Ctrl+C to stop both servers gracefully
-trap "echo 'Stopping services...'; kill -9 $BACKEND_PID $FRONTEND_PID 2>/dev/null; exit" INT TERM
-
-wait $FRONTEND_PID $BACKEND_PID
