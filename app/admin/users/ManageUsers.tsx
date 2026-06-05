@@ -51,7 +51,7 @@ export default function ManageUsers({ users: initialUsers }: ManageUsersProps) {
         if (res.success) {
             setNewUsername("");
             setCustomPassword("");
-            setGeneratedPass(res.user.generatedPassword);
+            setGeneratedPass(res.user?.generatedPassword || null);
             router.refresh();
         } else {
             setError(res.message || res.error || "Failed to create user");

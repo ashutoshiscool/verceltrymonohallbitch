@@ -8,8 +8,8 @@ import { getFeaturedEvents } from "./admin/events/actions";
 import { getSettings } from "./admin/settings/actions";
 
 export default async function Home() {
-    const { brands } = await getBrands();
-    const { events: featuredEvents } = await getFeaturedEvents();
+    const brands = ((await getBrands()).brands || []) as any;
+    const featuredEvents = ((await getFeaturedEvents()).events || []) as any;
     const settings = await getSettings();
 
     return (

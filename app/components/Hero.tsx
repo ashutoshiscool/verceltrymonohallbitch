@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ArrowDown } from "lucide-react";
 
 interface HeroProps {
-    brands?: { id: number; name: string; logo_base64: string }[];
+    brands?: { id: number; name: string; logo_url: string }[];
     settings?: { hero_layout?: string; brand_size?: string; brand_spacing?: string };
 }
 
@@ -130,7 +130,7 @@ export default function Hero({ brands = [], settings = {} }: HeroProps) {
                     {brands.map((brand) => (
                         <Link key={`desktop-${brand.id}`} href={`/brands/${brand.id}`} className="relative block shrink-0 opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110">
                             <img
-                                src={brand.logo_base64}
+                                src={brand.logo_url}
                                 alt={brand.name}
                                 style={{
                                     maxWidth: `${size}px`,
@@ -161,7 +161,7 @@ export default function Hero({ brands = [], settings = {} }: HeroProps) {
                                 {brands.map((brand) => (
                                     <Link key={`mobile-${brand.id}`} href={`/brands/${brand.id}`} className="relative block shrink-0 opacity-60 hover:opacity-100 grayscale hover:grayscale-0 transition-all">
                                         <img
-                                            src={brand.logo_base64}
+                                            src={brand.logo_url}
                                             alt={brand.name}
                                             style={{
                                                 height: layout === "BOTTOM-M" ? '40px' : '32px',

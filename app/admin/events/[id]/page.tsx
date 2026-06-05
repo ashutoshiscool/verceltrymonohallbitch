@@ -15,8 +15,8 @@ export default async function Page({ params }: Props) {
         getEventGallery(id)
     ]);
 
-    const event = eventRes.success ? eventRes.event : null;
-    const gallery = galleryRes.success ? galleryRes.gallery : [];
+    const event = (eventRes.success ? eventRes.event : null) as any;
+    const gallery = (galleryRes.success ? (galleryRes.gallery || []) : []) as any;
 
     return <ManageGallery id={id} event={event} gallery={gallery} />;
 }

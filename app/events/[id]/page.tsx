@@ -37,9 +37,9 @@ export default async function EventPage({ params }: Props) {
             {/* Hero Section */}
             <section className="relative w-full h-[70vh] min-h-[500px]">
                 <div className="absolute inset-0">
-                    {event.image_base64 && (
+                    {event.image_url && (
                         <Image
-                            src={event.image_base64}
+                            src={event.image_url}
                             alt={event.artist}
                             fill
                             className="object-cover"
@@ -117,10 +117,10 @@ export default async function EventPage({ params }: Props) {
                         </h2>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                            {gallery.map((image: { id: number; image_base64: string; caption: string }) => (
+                            {gallery.map((image: { id: number; image_url: string; caption: string }) => (
                                 <div key={image.id} className="group relative aspect-square overflow-hidden bg-neutral-200">
                                     <Image
-                                        src={image.image_base64}
+                                        src={image.image_url}
                                         alt={image.caption || event.artist}
                                         fill
                                         className="object-cover transition-transform duration-500 group-hover:scale-105"

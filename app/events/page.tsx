@@ -14,7 +14,7 @@ type Event = {
     price: string;
     status: string;
     ticket_url: string;
-    image_base64: string;
+    image_url: string;
     brand_name?: string;
 };
 
@@ -85,9 +85,9 @@ export default async function EventsPage() {
                                 >
                                     {/* Image */}
                                     <div className="relative aspect-[4/3] overflow-hidden">
-                                        {event.image_base64 && (
+                                        {event.image_url && (
                                             <Image
-                                                src={event.image_base64}
+                                                src={event.image_url}
                                                 alt={event.artist}
                                                 fill
                                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -166,9 +166,9 @@ export default async function EventsPage() {
                                 >
                                     {/* Image */}
                                     <div className="relative aspect-square overflow-hidden">
-                                        {event.image_base64 && (
+                                        {event.image_url && (
                                             <Image
-                                                src={event.image_base64}
+                                                src={event.image_url}
                                                 alt={event.artist}
                                                 fill
                                                 className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105"

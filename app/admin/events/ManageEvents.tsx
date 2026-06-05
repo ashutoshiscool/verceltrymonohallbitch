@@ -15,7 +15,7 @@ type Event = {
     price: string;
     status: string;
     ticket_url: string;
-    image_base64: string;
+    image_url: string;
     brand_id: number | null;
     brand_name: string | null;
     is_featured: number;
@@ -24,7 +24,7 @@ type Event = {
 type Brand = {
     id: number;
     name: string;
-    logo_base64: string;
+    logo_url: string;
 };
 
 interface ManageEventsProps {
@@ -302,9 +302,9 @@ export default function ManageEvents({ events: initialEvents, brands }: ManageEv
 
                                     {/* Image Preview */}
                                     <div className="w-full md:w-32 h-32 md:h-24 relative bg-neutral-100 shrink-0">
-                                        {event.image_base64 && (
+                                        {event.image_url && (
                                             <Image
-                                                src={event.image_base64}
+                                                src={event.image_url}
                                                 alt={event.artist}
                                                 fill
                                                 className="object-cover"
@@ -481,7 +481,7 @@ export default function ManageEvents({ events: initialEvents, brands }: ManageEv
                                     />
                                     <div className="relative w-24 h-24 border border-neutral-200 bg-neutral-100 shrink-0">
                                         <Image
-                                            src={editPreviewUrl || editingEvent.image_base64}
+                                            src={editPreviewUrl || editingEvent.image_url}
                                             alt="Preview"
                                             fill
                                             className="object-cover"

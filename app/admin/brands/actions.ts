@@ -2,12 +2,23 @@
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { supabase, uploadImageToSupabase } from "@/app/utils/supabase";
+
+function checkAuth(token: string | undefined) {
+    if (!token) return false;
+    return true; 
+}
 
 export async function getBrands() {
     try {
-        const res = await fetch("http://localhost:3001/brands", { cache: 'no-store' });
-        const data = await res.json();
-        return data; // { success: true, brands: [...] }
+        const { data, error } = await supabase
+            .from('brands')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        return { success: true, brands: data };
     } catch (error) {
         console.error("Error fetching brands:", error);
         return { success: false, error: "Failed to fetch brands" };
@@ -17,56 +28,55 @@ export async function getBrands() {
 export async function createBrand(formData: FormData) {
     const cookieStore = await cookies();
     const token = cookieStore.get("admin_token")?.value;
-
-    if (!token) return { success: false, error: "Unauthorized" };
+    if (!checkAuth(token)) return { success: false, error: "Unauthorized" };
 
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
     const logoFile = formData.get("logo") as File;
-    let logo_base64 = "";
 
-    if (logoFile && logoFile.size > 0) {
-        const buffer = await logoFile.arrayBuffer();
-        const base64 = Buffer.from(buffer).toString("base64");
-        logo_base64 = `data:${logoFile.type};base64,${base64}`;
+    if (!name || !logoFile || logoFile.size === 0) {
+        return { success: false, error: "Name and Logo are required" };
+    }
+
+    const logo_url = await uploadImageToSupabase(logoFile);
+    if (!logo_url) {
+        return { success: false, error: "Failed to upload logo" };
     }
 
     try {
-        const res = await fetch("http://localhost:3001/brands", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({ name, description, logo_base64 }),
-        });
-        const data = await res.json();
+        const { data, error } = await supabase
+            .from('brands')
+            .insert([{ name, description, logo_url }])
+            .select()
+            .single();
+
+        if (error) throw error;
+
         revalidatePath("/admin/brands");
-        return data;
-    } catch (error) {
+        return { success: true, message: "Brand created successfully", brand: data };
+    } catch (error: any) {
         console.error("Error creating brand:", error);
-        return { success: false, error: "Failed to create brand" };
+        return { success: false, error: error.message || "Failed to create brand" };
     }
 }
 
 export async function deleteBrand(id: number) {
     const cookieStore = await cookies();
     const token = cookieStore.get("admin_token")?.value;
-
-    if (!token) return { success: false, error: "Unauthorized" };
+    if (!checkAuth(token)) return { success: false, error: "Unauthorized" };
 
     try {
-        const res = await fetch(`http://localhost:3001/brands/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        });
-        const data = await res.json();
+        const { error } = await supabase
+            .from('brands')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+
         revalidatePath("/admin/brands");
-        return data;
-    } catch (error) {
+        return { success: true, message: "Brand deleted" };
+    } catch (error: any) {
         console.error("Error deleting brand:", error);
-        return { success: false, error: "Failed to delete brand" };
+        return { success: false, error: error.message || "Failed to delete brand" };
     }
 }

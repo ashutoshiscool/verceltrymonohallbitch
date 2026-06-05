@@ -7,13 +7,12 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 FRONTEND_PORT=8000
-BACKEND_PORT=3001
-PORTS=($FRONTEND_PORT $BACKEND_PORT)
+PORTS=($FRONTEND_PORT)
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "=== System Update and System Dependencies ==="
 apt-get update
-apt-get install -y curl lsof psmisc
+apt-get install -y curl lsof psmisc postgresql-client
 
 echo "=== Node.js Installation ==="
 if ! command -v node &> /dev/null; then
@@ -69,16 +68,13 @@ for PORT in "${PORTS[@]}"; do
 done
 
 echo "=== Project Setup ==="
-
-echo "Setting up Backend..."
-cd "$DIR/backend" || exit 1
-echo "Installing backend NPM dependencies..."
-npm install
-
 echo "Setting up Frontend..."
 cd "$DIR" || exit 1
 echo "Installing frontend NPM dependencies..."
 npm install --legacy-peer-deps
+
+echo "Building Next.js app..."
+npm run build
 
 echo "=== Installing PM2 (Process Manager) ==="
 if ! command -v pm2 &> /dev/null; then
@@ -90,15 +86,10 @@ echo "=== Starting Applications ==="
 pm2 delete monohall-backend 2>/dev/null || true
 pm2 delete monohall-frontend 2>/dev/null || true
 
-echo "Starting Backend on port $BACKEND_PORT..."
-cd "$DIR/backend" || exit 1
-pm2 start server.js --name "monohall-backend"
-
 echo "Starting Next.js frontend on port $FRONTEND_PORT..."
 cd "$DIR" || exit 1
-pm2 start "npm run dev -- -p $FRONTEND_PORT" --name "monohall-frontend"
+pm2 start "npm run start -- -p $FRONTEND_PORT" --name "monohall-frontend"
 
-echo "Both services are now running permanently in the background via PM2."
+echo "The application is now running permanently in the background via PM2."
 pm2 save
 pm2 list
-

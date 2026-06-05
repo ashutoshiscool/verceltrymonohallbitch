@@ -7,7 +7,7 @@ import { Search, Menu, X, Instagram, Facebook, MapPin, Phone, ArrowRight, Trendi
 type Brand = {
     id: number;
     name: string;
-    logo_base64: string;
+    logo_url: string;
 };
 
 export default function Navbar({ theme = "light", brands = [] }: { theme?: "light" | "dark"; brands?: Brand[] }) {
@@ -85,7 +85,7 @@ export default function Navbar({ theme = "light", brands = [] }: { theme?: "ligh
                         >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
-                                src={brand.logo_base64}
+                                src={brand.logo_url}
                                 alt={brand.name}
                                 className={`h-8 w-auto object-contain transition-all duration-300 ${scrolled ? "brightness-0" : (theme === "dark" ? "brightness-0 invert" : "brightness-0")}`}
                             />

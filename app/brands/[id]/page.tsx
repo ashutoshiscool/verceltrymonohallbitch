@@ -20,7 +20,7 @@ type Event = {
     date: string;
     status: string;
     ticket_url: string;
-    image_base64: string;
+    image_url: string;
 };
 
 export default async function BrandPage({ params }: Props) {
@@ -84,9 +84,9 @@ export default async function BrandPage({ params }: Props) {
                     <div className="flex flex-col md:flex-row items-center md:items-end gap-8">
                         {/* Brand Logo */}
                         <div className="relative w-32 h-24 md:w-48 md:h-32 grayscale hover:grayscale-0 transition-all duration-700">
-                            {brand.logo_base64 && (
+                            {brand.logo_url && (
                                 <Image
-                                    src={brand.logo_base64}
+                                    src={brand.logo_url}
                                     alt={brand.name}
                                     fill
                                     className="object-contain"
@@ -155,9 +155,9 @@ export default async function BrandPage({ params }: Props) {
                                     className="group relative bg-white hover:bg-neutral-100 transition-colors overflow-hidden"
                                 >
                                     <div className="relative aspect-[4/3] overflow-hidden">
-                                        {event.image_base64 && (
+                                        {event.image_url && (
                                             <Image
-                                                src={event.image_base64}
+                                                src={event.image_url}
                                                 alt={event.artist}
                                                 fill
                                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -217,9 +217,9 @@ export default async function BrandPage({ params }: Props) {
                                     className="group relative bg-neutral-50 hover:bg-neutral-100 transition-colors overflow-hidden"
                                 >
                                     <div className="relative aspect-square overflow-hidden">
-                                        {event.image_base64 && (
+                                        {event.image_url && (
                                             <Image
-                                                src={event.image_base64}
+                                                src={event.image_url}
                                                 alt={event.artist}
                                                 fill
                                                 className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105"

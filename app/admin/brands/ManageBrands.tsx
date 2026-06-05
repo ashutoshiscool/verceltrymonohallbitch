@@ -10,7 +10,7 @@ import { createBrand, deleteBrand } from "./actions";
 type Brand = {
     id: number;
     name: string;
-    logo_base64: string;
+    logo_url: string;
     description: string;
     created_at: string;
 };
@@ -172,9 +172,9 @@ export default function ManageBrands({ brands: initialBrands }: ManageBrandsProp
                         brands.map((brand) => (
                             <div key={brand.id} className="group bg-white border border-neutral-200 p-6 flex flex-col gap-4 hover:border-orange-200 transition-colors relative">
                                 <div className="h-24 relative w-full flex items-center justify-center bg-neutral-50 border border-neutral-100 p-4 grayscale group-hover:grayscale-0 transition-all duration-500">
-                                    {brand.logo_base64 && (
+                                    {brand.logo_url && (
                                         <Image
-                                            src={brand.logo_base64}
+                                            src={brand.logo_url}
                                             alt={brand.name}
                                             fill
                                             className="object-contain p-2"

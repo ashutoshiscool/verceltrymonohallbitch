@@ -13,7 +13,7 @@ type Event = {
     price: string;
     status: string;
     ticket_url: string;
-    image_base64: string;
+    image_url: string;
 };
 
 export default function EventsList({ events = [] }: { events: Event[] }) {
@@ -112,9 +112,9 @@ export default function EventsList({ events = [] }: { events: Event[] }) {
                             >
                                 {/* Image Background */}
                                 <div className="absolute inset-0 w-full h-full">
-                                    {event.image_base64 && (
+                                    {event.image_url && (
                                         <Image
-                                            src={event.image_base64}
+                                            src={event.image_url}
                                             alt={event.artist}
                                             fill
                                             className="object-cover"

@@ -10,7 +10,7 @@ import { addToGallery, deleteFromGallery } from "../actions";
 type GalleryImage = {
     id: number;
     event_id: number;
-    image_base64: string;
+    image_url: string;
     caption: string;
     created_at: string;
 };
@@ -198,7 +198,7 @@ export default function ManageGallery({ id, event, gallery: initialGallery }: Ma
                                     onClick={() => setSelectedImage(image)}
                                 >
                                     <Image
-                                        src={image.image_base64}
+                                        src={image.image_url}
                                         alt={image.caption || "Gallery image"}
                                         fill
                                         className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -241,7 +241,7 @@ export default function ManageGallery({ id, event, gallery: initialGallery }: Ma
 
                     <div className="relative max-w-4xl max-h-[80vh] w-full h-full" onClick={(e) => e.stopPropagation()}>
                         <Image
-                            src={selectedImage.image_base64}
+                            src={selectedImage.image_url}
                             alt={selectedImage.caption || "Gallery image"}
                             fill
                             className="object-contain"
